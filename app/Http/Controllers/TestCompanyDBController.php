@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TestCompanyDB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -10,6 +11,7 @@ class TestCompanyDBController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
+     * @throws \Throwable
      */
     public function store(Request $request)
     {
@@ -28,10 +30,24 @@ class TestCompanyDBController extends Controller
             'activity' => 'nullable|string',
             'active' => 'nullable|string|in:yes,no',
             'email' => 'nullable|email',
-            'password' => 'required|string|min:6',       ]);
+            'password' => 'required|string|min:6',
+        ]);
 
-        $company = TestCompanyDB::create($request->all());
+        $company = TestCompanyDB::createCompany($request->all());
 
         return response()->json($company, 201);
     }
+
+    /**
+     * @param $companyId
+     * @return JsonResponse
+     */
+    public function show($companyId)
+    {
+        $companies = TestCompanyDB::findCompany(explode(',', $companyId));
+
+        return response()->json($companies);
+    }
+
+
 }

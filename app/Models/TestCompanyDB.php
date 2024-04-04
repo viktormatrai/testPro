@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Throwable;
 
 class TestCompanyDB extends Model
 {
@@ -45,5 +47,26 @@ class TestCompanyDB extends Model
         static::creating(function ($model) {
             $model->companyRegistrationDate = now();
         });
+    }
+
+    /**
+     * @param array $attributes
+     * @return bool
+     * @throws Throwable
+     */
+    public function createCompany(array $attributes)
+    {
+        return (new TestCompanyDB)->saveOrFail($attributes);
+    }
+
+    /**
+     * @param array $companyID
+     * @return TestCompanyDB[]|Collection|Model|null
+     */
+    public function findCompany(array $companyID)
+    {
+        $companies = TestCompanyDB::all();
+
+        return $companies->find($companyID);
     }
 }
