@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TestCompanyDB;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -50,9 +51,14 @@ class TestCompanyDBController extends Controller
      */
     public function show($companyId)
     {
-        $companies = (new TestCompanyDB)->findCompany(explode(',', $companyId));
+        try {
+            $companies = (new TestCompanyDB)->findCompany(explode(',', $companyId));
 
-        return response()->json($companies);
+            return response()->json($companies);
+        } catch (Exception $e) {
+            Log::error('Error occurred while fetching company: ' . $e->getMessage());
+            return response()->json(['error' => 'Error occurred while fetching company'], 500);
+        }
     }
 
     /**
@@ -91,7 +97,7 @@ class TestCompanyDBController extends Controller
             $company->update($request->all());
 
             return response()->json($company, 201);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Error occurred while updating company: ' . $e->getMessage());
             return response()->json(['error' => 'Error occurred while updating company'], 500);
         }
@@ -99,10 +105,15 @@ class TestCompanyDBController extends Controller
 
     public function destroy($companyId)
     {
-        $company = TestCompanyDB::findCompany($companyId);
+        try {
+            $company = TestCompanyDB::findCompany($companyId);
 
-        $company->delete();
+            $company->delete();
 
-        return response()->json(null, 204);
+            return response()->json(null, 204);
+        } catch (Exception $e) {
+            Log::error('Error occurred while deleting company: ' . $e->getMessage());
+            return response()->json(['error' => 'Error occurred while deleting company'], 500);
+        }
     }
 }
