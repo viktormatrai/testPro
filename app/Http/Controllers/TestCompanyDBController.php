@@ -83,6 +83,15 @@ class TestCompanyDBController extends Controller
 
         $company->update($request->all());
 
-        return response()->json($company, 200);
+        return response()->json($company, 201);
+    }
+
+    public function destroy($companyId)
+    {
+        $company = (new TestCompanyDB)->findCompany($companyId);
+
+        $company->delete();
+
+        return response()->json(null, 204);
     }
 }
