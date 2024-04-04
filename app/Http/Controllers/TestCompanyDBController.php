@@ -49,6 +49,11 @@ class TestCompanyDBController extends Controller
         return response()->json($companies);
     }
 
+    /**
+     * @param Request $request
+     * @param $companyId
+     * @return JsonResponse
+     */
     public function update(Request $request, $companyId)
     {
         $request->validate([
