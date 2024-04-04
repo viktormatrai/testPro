@@ -33,7 +33,7 @@ class TestCompanyDBController extends Controller
             'password' => 'required|string|min:6',
         ]);
 
-        $company = TestCompanyDB::createCompany($request->all());
+        $company = (new TestCompanyDB)->createCompany($request->all());
 
         return response()->json($company, 201);
     }
@@ -44,10 +44,9 @@ class TestCompanyDBController extends Controller
      */
     public function show($companyId)
     {
-        $companies = TestCompanyDB::findCompany(explode(',', $companyId));
+        $companies = (new TestCompanyDB)->findCompany(explode(',', $companyId));
 
         return response()->json($companies);
     }
-
 
 }
