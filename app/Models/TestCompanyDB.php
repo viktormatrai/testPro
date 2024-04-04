@@ -65,7 +65,7 @@ class TestCompanyDB extends Model
      */
     public function findCompany(array $companyID)
     {
-        $companies = TestCompanyDB::all();
+        $companies = $this->all();
 
         return $companies->find($companyID);
     }

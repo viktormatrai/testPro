@@ -49,4 +49,35 @@ class TestCompanyDBController extends Controller
         return response()->json($companies);
     }
 
+    public function update(Request $request, $companyId)
+    {
+        $request->validate([
+            'companyName' => 'sometimes|required|string|unique:testCompanyDBmodified,companyName,'
+                . $companyId .
+                ',companyId',
+            'companyRegistrationNumber' =>
+                'sometimes|required|string|unique:testCompanyDBmodified,companyRegistrationNumber,'
+                . $companyId .
+                ',companyId',
+            'companyFoundationDate' => 'sometimes|required|date',
+            'country' => 'sometimes|required|string',
+            'zipCode' => 'sometimes|required|string',
+            'city' => 'sometimes|required|string',
+            'streetAddress' => 'sometimes|required|string',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            'companyOwner' => 'nullable|string',
+            'employees' => 'nullable|integer|min:0',
+            'activity' => 'nullable|string',
+            'active' => 'nullable|string|in:yes,no',
+            'email' => 'nullable|email',
+            'password' => 'sometimes|required|string|min:6',
+        ]);
+
+        $company = (new TestCompanyDB)->findCompany($companyId);
+
+        $company->update($request->all());
+
+        return response()->json($company, 200);
+    }
 }
